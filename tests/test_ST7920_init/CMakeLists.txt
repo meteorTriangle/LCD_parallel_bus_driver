@@ -25,9 +25,9 @@ set(PICO_CXX_ENABLE_EXCEPTIONS 1)
 # Initialise the Raspberry Pi Pico SDK
 pico_sdk_init()
 
-include_directories(../../LCD_parallel_driver)
+include_directories(../../)
 
-add_subdirectory(../../LCD_parallel_driver build)
+add_subdirectory(../../ build)
 
 # Add executable. Default name is the project name, version 0.1
 
