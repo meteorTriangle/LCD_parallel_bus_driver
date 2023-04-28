@@ -1,24 +1,28 @@
 cmake_minimum_required(VERSION 3.13)
 
-project(LCD_parallel_driver VERSION 0.2.1 DESCRIPTION "for LCD parallel driver")
-add_library(LCD_parallel_driver src/LCD_parallel_driver.cpp)
-
-
+include(pico_sdk_import.cmake)
 set(PICO_SDK_PATH "${PICO_SDK_PATH}")
 set(PICO_BOARD pico CACHE STRING "Board type")
 
-include(pico_sdk_import.cmake)
+project(LCD_parallel_driver C CXX ASM)
+add_library(LCD_parallel_driver SHARED src/LCD_parallel_driver.cpp)
 
-pico_sdk_init()
+
 
 target_include_directories(LCD_parallel_driver PRIVATE
     ${PICO_SDK_PATH}
 )
 
+pico_sdk_init()
+
 target_include_directories(LCD_parallel_driver PUBLIC
-    ${PROJECT_SOURCE_DIR}/include
+    ./include
 )
 
-target_link_libraries(LCD_parallel_driver PRIVATE
+target_link_libraries(LCD_parallel_driver
         pico_stdlib
-        hardware_gpio)
+        hardware_gpio
+        hardware_timer
+        hardware_clocks)
+
+add_subdirectory(example/test_ST7920_init)

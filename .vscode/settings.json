@@ -2,18 +2,18 @@
     "cmake.configureOnOpen": true,
     "cmake.statusbar.advanced": {
         "debug" : {
-          "visibility": "hidden"
+          "visibility": "default"
                   },
         "launch" : {
-          "visibility": "hidden"
+          "visibility": "default"
                    },
         "build" : {
-          "visibility": "hidden"
+          "visibility": "default"
                    },
         "buildTarget" : {
-          "visibility": "hidden"
+          "visibility": "default"
                    },
     },
     "C_Cpp.errorSquiggles": "disabled",
-    "cmake.sourceDirectory": "C:/Users/bcps1/Desktop/project/LCD_parallel_driver/example/test_ST7920_init"
+    "cmake.sourceDirectory": "C:/Users/bcps1/Desktop/project/LCD_parallel_driver/example/test_ST7920_init/",
 }
