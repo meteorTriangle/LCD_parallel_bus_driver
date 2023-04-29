@@ -125,3 +125,18 @@ void parallel_interface::write(uint8_t data){
         enable();
      }
 }
+
+/// @brief write a 8 bit data
+/// @param data which you want to write 
+/// @param delay_us delay after write data(unit: us)
+void parallel_interface::write(uint8_t data, int delay_us){
+    if(parallel_obj->bit_mode_get() == parallel_4){
+        sleep_us(10);
+     }
+     if(parallel_obj->bit_mode_get() == parallel_8){
+        parallel_obj->set_write();
+        parallel_obj->out_data_set8(data);
+        sleep_us(delay_us);
+        enable();
+     }
+}
