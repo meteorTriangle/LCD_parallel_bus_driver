@@ -23,6 +23,7 @@ parallel_pin::parallel_pin(uint RS, uint RW, uint data_pin1, bit_mode mode_bit){
     }
 }
 
+/// @brief set GPIO write
 void parallel_pin::set_write(){
     gpio_put(RW, false);
     int data_pin_q = (parallel_bit == 1) ? 8 : 4;
@@ -30,7 +31,7 @@ void parallel_pin::set_write(){
         gpio_set_dir(data_pin1 + i, true);
     }
 }
-
+/// @brief set GPIO read
 void parallel_pin::set_read(){
     gpio_put(RW, true);
     int data_pin_q = (parallel_bit == 1) ? 8 : 4;
@@ -38,7 +39,8 @@ void parallel_pin::set_read(){
         gpio_set_dir(data_pin1 + i, false);
     }
 }
-
+/// @brief set GPIO output data 8-bit
+/// @param data which you want gpio set(8-bit data)
 void parallel_pin::out_data_set8(uint8_t data){
     for(int i=0; i<8; i++){
         bool sta = ((data>>i) & 0x01) == 0x01;
@@ -47,6 +49,8 @@ void parallel_pin::out_data_set8(uint8_t data){
 
 }
 
+/// @brief set GPIO output data 4-bit
+/// @param data which you want gpio set(4-bit data)
 void parallel_pin::out_data_set4(uint8_t data){
     for(int i=0; i<4; i++){
         bool sta = ((data>>i) & 0x01) == 0x01;
@@ -55,18 +59,25 @@ void parallel_pin::out_data_set4(uint8_t data){
 
 }
 
+/// @brief set to write instruction
 void parallel_pin::RS_instruction(){
     gpio_put(RS, false);
 }
 
+/// @brief set to write or read data reg
 void parallel_pin::RS_data_reg(){
     gpio_put(RS, true);
 }
 
+/// @brief get parallel bit
+/// @return parallel_4 is 4-bit, parallel_8 is 8-bit
 bit_mode parallel_pin::bit_mode_get(){
     return(parallel_bit);
 }
 
+/// @brief initial parallel_interface
+/// @param ena ena pin
+/// @param parallel_obj parallel_pin object
 parallel_interface::parallel_interface(int ena, parallel_pin parallel_obj){
     this->ena_pin = ena;
     this->parallel_obj = &parallel_obj;
@@ -75,7 +86,10 @@ parallel_interface::parallel_interface(int ena, parallel_pin parallel_obj){
     gpio_set_dir(ena_pin, true);
 }
 
-
+/// @brief initial parallel_interface
+/// @param ena ena pin
+/// @param parallel_obj parallel_pin object
+/// @param ena_keep_ns enable pin pulse width(unit: ms)
 parallel_interface::parallel_interface(int ena, parallel_pin parallel_obj, int ena_keep_ns){
     this->ena_pin = ena;
     this->parallel_obj = &parallel_obj;
@@ -85,16 +99,21 @@ parallel_interface::parallel_interface(int ena, parallel_pin parallel_obj, int e
     gpio_set_dir(ena_pin, true);
 }
 
+/// @brief set enable pin pulse width(unit: ms)
+/// @param ena_keep_ns enable pin pulse width(unit: ms)
 void parallel_interface::set_ena_keep_ns(int ena_keep_ns){
     this->ena_keep_ns = ena_keep_ns;
 }
 
+/// @brief generate a enable pulse
 void parallel_interface::enable(){
     gpio_put(ena_pin, true);
-    sleep_us(1);
+    uint r0 = 0 << 1;
     gpio_put(ena_pin, false);
 }
 
+/// @brief write a 8 bit data
+/// @param data which you want to write 
 void parallel_interface::write(uint8_t data){
      if(parallel_obj->bit_mode_get() == parallel_4){
         sleep_us(10);
