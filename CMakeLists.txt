@@ -25,4 +25,4 @@ target_link_libraries(LCD_parallel_driver
         hardware_timer
         hardware_clocks)
 
-add_subdirectory(example/test_ST7920_init)
+add_subdirectory(example)

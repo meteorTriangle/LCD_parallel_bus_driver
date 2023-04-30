@@ -1,0 +1,2 @@
+add_subdirectory(ST7920_write_HelloWord)
+add_subdirectory(test_ST7920_init)

@@ -33,11 +33,11 @@ void parallel_pin::set_write(){
 }
 /// @brief set GPIO read
 void parallel_pin::set_read(){
-    gpio_put(RW, true);
     int data_pin_q = (parallel_bit == 1) ? 8 : 4;
     for(int i=0; i<data_pin_q; i++){
         gpio_set_dir(data_pin1 + i, false);
     }
+    gpio_put(RW, true);
 }
 /// @brief set GPIO output data 8-bit
 /// @param data which you want gpio set(8-bit data)
@@ -106,15 +106,23 @@ void parallel_interface::set_ena_keep_ns(int ena_keep_ns){
 }
 
 /// @brief generate a enable pulse
+[[gnu::noinline]]
 void parallel_interface::enable(){
     gpio_put(ena_pin, true);
-    uint r0 = 0 << 1;
+    asm volatile(
+	    "mov  r0, #17\n"
+        "mvn r0, r0\n"
+        "lloop:\n"
+        "add r0, r0, #1\n"
+        "bcc lloop\n"
+    );
     gpio_put(ena_pin, false);
 }
 
-/// @brief write a 8 bit data
+/// @brief write a 8 bit data to instruction
 /// @param data which you want to write 
-void parallel_interface::write(uint8_t data){
+void parallel_interface::write_instruction(uint8_t data){
+    parallel_obj->RS_instruction();
      if(parallel_obj->bit_mode_get() == parallel_4){
         sleep_us(10);
      }
@@ -126,10 +134,11 @@ void parallel_interface::write(uint8_t data){
      }
 }
 
-/// @brief write a 8 bit data
+/// @brief write a 8 bit data to instruction
 /// @param data which you want to write 
 /// @param delay_us delay after write data(unit: us)
-void parallel_interface::write(uint8_t data, int delay_us){
+void parallel_interface::write_instruction(uint8_t data, int delay_us){
+    parallel_obj->RS_instruction();
     if(parallel_obj->bit_mode_get() == parallel_4){
         sleep_us(10);
      }
@@ -138,5 +147,40 @@ void parallel_interface::write(uint8_t data, int delay_us){
         parallel_obj->out_data_set8(data);
         sleep_us(delay_us);
         enable();
+        sleep_us(delay_us);
      }
 }
+
+/// @brief write a 8 bit data to register
+/// @param data which you want to write 
+void parallel_interface::write_register(uint8_t data){
+    parallel_obj->RS_data_reg();
+     if(parallel_obj->bit_mode_get() == parallel_4){
+        sleep_us(10);
+     }
+     if(parallel_obj->bit_mode_get() == parallel_8){
+        parallel_obj->set_write();
+        parallel_obj->out_data_set8(data);
+        sleep_us(10);
+        enable();
+        sleep_us(10);
+     }
+}
+
+/// @brief write a 8 bit data to register
+/// @param data which you want to write 
+/// @param delay_us delay after write data(unit: us)
+void parallel_interface::write_register(uint8_t data, int delay_us){
+    parallel_obj->RS_data_reg();
+    if(parallel_obj->bit_mode_get() == parallel_4){
+        sleep_us(10);
+     }
+     if(parallel_obj->bit_mode_get() == parallel_8){
+        parallel_obj->set_write();
+        parallel_obj->out_data_set8(data);
+        sleep_us(delay_us);
+        enable();
+        sleep_us(delay_us);
+     }
+}
+
