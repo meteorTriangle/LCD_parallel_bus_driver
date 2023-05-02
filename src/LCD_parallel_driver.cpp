@@ -106,12 +106,11 @@ void parallel_interface::set_ena_keep_ns(int ena_keep_ns){
 }
 
 /// @brief generate a enable pulse
-[[gnu::noinline]]
 void parallel_interface::enable(){
     gpio_put(ena_pin, true);
     
     uint8_t x = 5;
-    asm(
+    asm volatile(
         " dmb\n"
         " 1:\n"
         " sub %[x], %[x], #1\n"
@@ -174,22 +173,22 @@ void parallel_interface::write_register(uint8_t data){
 /// @param delay_us delay after write data(unit: us)
 void parallel_interface::write_register(uint8_t data, int delay_us){
     parallel_obj->RS_data_reg();
+    parallel_obj->set_write();
     if(parallel_obj->bit_mode_get() == parallel_4){
         sleep_us(10);
      }
      if(parallel_obj->bit_mode_get() == parallel_8){
-        parallel_obj->set_write();
         parallel_obj->out_data_set8(data);
-        asm(
-            "nop\n"
-            "nop\n"
-            "nop\n"
-            "nop\n"
-            "nop\n"
-            "nop\n"
-            "nop\n" 
+        uint8_t x = 5;
+        asm volatile(
+            " dmb\n"
+            " 1:\n"
+            " sub %[x], %[x], #1\n"
+            " cmp %[x], #0\n"
+            " bne 1b"
+            : [x] "+r" (x) :: "cc"
         );
-        enable();
+        this->enable();
         sleep_us(delay_us);
      }
 }
