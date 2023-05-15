@@ -5,10 +5,10 @@
 
 int main(){
     stdio_init_all();
-    parallel_pin LCD_pin(0, 1, 8, parallel_8);
+    parallel_pin LCD_pin(0, 1, 12, parallel_4);
     parallel_interface LCD(2, LCD_pin, 5);
-    LCD.write_instruction(0b110000);
-    LCD.write_instruction(0b110000);
+    LCD.write_instruction(0b100000);
+    LCD.write_instruction(0b100000);
     LCD.write_instruction(0b1111);
     LCD.write_instruction(0b0001, 1800);
     LCD.write_instruction(0b100);

@@ -6,7 +6,7 @@
 
 int main(){
     stdio_init_all();
-    uint16_t display_text[21] = {
+    uint16_t display_text[] = {
         0xB0DA,
         0xB970,
         0xB751, 
@@ -28,12 +28,16 @@ int main(){
         0xA2F7, //o
         0xA2FA, //r
         0xA2EC, //d
+        0xBDB2, 
+        0xA5E0, 
+        0xBE55
         };
-    parallel_pin LCD_pin(0, 1, 8, parallel_8);
+    parallel_pin LCD_pin(0, 1, 12, parallel_4);
     parallel_interface LCD(2, LCD_pin, 5);
-    sleep_ms(200);
-    LCD.write_instruction(0b110000);
-    LCD.write_instruction(0b110000);
+    sleep_ms(1000);
+    LCD.write_instruction(0b100000, 100);
+    sleep_ms(1000);
+    LCD.write_instruction(0b100000, 100);
     LCD.write_instruction(0b1100, 100);
     LCD.write_instruction(0b0001, 1800);
     LCD.write_instruction(0b100, 100);
@@ -41,9 +45,12 @@ int main(){
     LCD.write_instruction(0b1100, 100);
     LCD.write_instruction(0b10100, 100);
     LCD.write_instruction(0x80, 100);
-    for(int j=0; j<5; ++j){
+    for(int j=6; j<11; ++j){
+        LCD.write_register((display_text[j]>>8) & 0xFF, 100);
+        LCD.write_register(display_text[j] & 0xFF, 100);
     }
-    int j = 0;
+    int j = 21;
+    /*
         LCD.write_register((display_text[j]>>8) & 0xFF, 100);
         LCD.write_register(display_text[j] & 0xFF, 100);
         j++;
@@ -52,7 +59,7 @@ int main(){
         j++;
         LCD.write_register((display_text[j]>>8) & 0xFF, 100);
         LCD.write_register(display_text[j] & 0xFF, 100);
-        j++;
+        j++;/*
         LCD.write_register((display_text[j]>>8) & 0xFF, 100);
         LCD.write_register(display_text[j] & 0xFF, 100);
         j++;
@@ -61,7 +68,7 @@ int main(){
         j++;
         LCD.write_register((display_text[j]>>8) & 0xFF, 100);
         LCD.write_register(display_text[j] & 0xFF, 100);
-        j++;
+        j++;*/
     while(true){
     }
     return(0);

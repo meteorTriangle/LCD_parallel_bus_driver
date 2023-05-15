@@ -5,7 +5,7 @@ set(PICO_SDK_PATH "${PICO_SDK_PATH}")
 set(PICO_BOARD pico CACHE STRING "Board type")
 
 project(LCD_parallel_driver C CXX ASM)
-add_library(LCD_parallel_driver SHARED src/LCD_parallel_driver.cpp)
+add_library(LCD_parallel_driver STATIC src/LCD_parallel_driver.cpp)
 
 
 
