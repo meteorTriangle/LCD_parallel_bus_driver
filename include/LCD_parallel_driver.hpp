@@ -37,6 +37,7 @@ class parallel_interface {
         void write_instruction(uint8_t data, int delay_us);
         void write_register(uint8_t data);
         void write_register(uint8_t data, int delay_us);
+        bit_mode getBusBitWidth();
         //uint8_t read();
     private:
         void enable();

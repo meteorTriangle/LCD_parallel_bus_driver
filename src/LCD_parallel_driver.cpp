@@ -215,3 +215,6 @@ void parallel_interface::write_register(uint8_t data, int delay_us){
      }
 }
 
+bit_mode parallel_interface::getBusBitWidth(){
+    return(parallel_obj->bit_mode_get);
+}
