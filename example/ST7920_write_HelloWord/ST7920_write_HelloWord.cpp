@@ -35,7 +35,7 @@ int main(){
     parallel_pin LCD_pin(0, 1, 12, parallel_4);
     parallel_interface LCD(2, LCD_pin, 5);
     sleep_ms(1000);
-    LCD.write_instruction(0b100000, 100);
+    LCD.write_instruction_4(0b100000, 100);
     sleep_ms(1000);
     LCD.write_instruction(0b100000, 100);
     LCD.write_instruction(0b1100, 100);

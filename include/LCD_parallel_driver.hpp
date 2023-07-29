@@ -33,6 +33,7 @@ class parallel_interface {
         parallel_interface(int ena, parallel_pin parallel_obj, int ena_keep_ns);
         void set_ena_keep_ns(int ena_keep_ns);
         void write_instruction(uint8_t data);
+        void write_instruction_4(uint8_t data, int delay_us);
         void write_instruction(uint8_t data, int delay_us);
         void write_register(uint8_t data);
         void write_register(uint8_t data, int delay_us);

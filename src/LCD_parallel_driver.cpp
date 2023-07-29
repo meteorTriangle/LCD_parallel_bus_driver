@@ -109,7 +109,7 @@ void parallel_interface::set_ena_keep_ns(int ena_keep_ns){
 [[gnu::noinline]]
 void parallel_interface::enable(){
     gpio_put(ena_pin, true);
-    uint32_t x = 5;
+    uint32_t x = 10;
     asm volatile(
         " dmb\n"
         " 1:\n"
@@ -136,6 +136,7 @@ void parallel_interface::write_instruction(uint8_t data){
      }
 }
 
+
 /// @brief write a 8 bit data to instruction
 /// @param data which you want to write 
 /// @param delay_us delay after write data(unit: us)
@@ -148,6 +149,27 @@ void parallel_interface::write_instruction(uint8_t data, int delay_us){
         sleep_us(2);
         parallel_obj->out_data_set4(data);
         this->enable();
+        sleep_us(delay_us);
+     }
+     if(parallel_obj->bit_mode_get() == parallel_8){
+        parallel_obj->out_data_set8(data);
+        this->enable();
+        sleep_us(delay_us);
+     }
+}
+
+/// @brief write a 8 bit data to instruction
+/// @param data which you want to write 
+/// @param delay_us delay after write data(unit: us)
+void parallel_interface::write_instruction_4(uint8_t data, int delay_us){
+    parallel_obj->RS_instruction();
+    parallel_obj->set_write();
+    if(parallel_obj->bit_mode_get() == parallel_4){
+        parallel_obj->out_data_set4(data>>4);
+        this->enable();
+        sleep_us(2);
+        //parallel_obj->out_data_set4(data);
+        //this->enable();
         sleep_us(delay_us);
      }
      if(parallel_obj->bit_mode_get() == parallel_8){
