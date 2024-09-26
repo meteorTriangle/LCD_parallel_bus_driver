@@ -109,7 +109,8 @@ void parallel_interface::set_ena_keep_ns(int ena_keep_ns){
 [[gnu::noinline]]
 void parallel_interface::enable(){
     gpio_put(ena_pin, true);
-    uint32_t x = 5;
+    uint32_t x = 20;
+    
     asm volatile(
         " dmb\n"
         " 1:\n"
@@ -118,6 +119,8 @@ void parallel_interface::enable(){
         " bne 1b"
         : [x] "+r" (x) :: "cc"
     );
+    
+    //sleep_us(2);
     gpio_put(ena_pin, false);
 }
 

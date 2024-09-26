@@ -1,7 +1,5 @@
 #include <stdio.h>
 #include "pico/stdlib.h"
-#include "hardware/gpio.h"
-#include <stdint.h>
 
 #ifndef LCD_PARALLEL_DRIVER_H
 #define LCD_PARALLEL_DRIVER_H
